@@ -1,4 +1,7 @@
 #include "main.h"
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
 
 /**
  * _printf - Printf function
@@ -8,10 +11,11 @@
 
 int _printf(const char *format, ...)
 {
+int printed_chars = 0;
+
 va_list args;
 va_start(args, format);
 
-int printed_chars = 0;
 while (*format != '\0')
 {
 if (*format == '%')
@@ -43,11 +47,5 @@ printed_chars++;
 format++;
 }
 va_end(args);
-return printed_chars;
-}
-int main(void)
-{
-int count = _printf("Hello, %s! Today is %c%c%c.\n", "John", 'J', 'u', 'n');
-printf("Printed characters: %d\n", count);
-return 0;
+return (printed_chars);
 }
