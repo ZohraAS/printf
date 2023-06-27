@@ -1,22 +1,21 @@
-#include "main.h"
 #include <stdio.h>
-#include <string.h>
 #include <stdarg.h>
+#include "main.h"
 
 /**
  * _printf - printf function
  *
- * @format: format
+ * @format: the format str
  *
- * Return: printed chars
+ * Return: the number of chars printed
  */
 int _printf(const char *format, ...)
 {
-	int printed_chars = 0;
 	va_list args;
-	int ch;
-	char *str;
-	int num;
+	int count = 0;
+	char c;
+	char *s;
+	int d;
 
 	va_start(args, format);
 
@@ -28,51 +27,43 @@ int _printf(const char *format, ...)
 			switch (*format)
 			{
 				case 'c':
-					ch = va_arg(args, int);
-					putchar(ch);
-					printed_chars++;
+					c = va_arg(args, int);
+					putchar(c);
+					count++;
 					break;
 				case 's':
-					str = va_arg(args, char *);
-					fputs(str, stdout);
-					printed_chars += strlen(str);
+					s = va_arg(args, char *);
+					while (*s != '\0')
+					{
+						putchar(*s);
+						s++;
+						count++;
+					}
 					break;
 				case '%':
 					putchar('%');
-					printed_chars++;
+					count++;
 					break;
 				case 'd':
 				case 'i':
-					num = va_arg(args, int);
-					printed_chars += printf("%d", num);
-					break;
-				case 'u':
-					num = va_arg(args, unsigned int);
-					printed_chars += printf("%u", num);
-					break;
-				case 'o':
-					num = va_arg(args, unsigned int);
-					printed_chars += printf("%o", num);
-					break;
-				case 'x':
-				case 'X':
-					num = va_arg(args, unsigned int);
-					printed_chars += printf("%x", num);
+					d = va_arg(args, int);
+					printf("%d", d);
+					count++;
 					break;
 				default:
 					putchar('%');
 					putchar(*format);
-					printed_chars += 2;
+					count += 2;
 					break;
 			}
 		}
 		else
 		{
 			putchar(*format);
-			printed_chars++;
+			count++;
 		}
-	format++;
+		format++;
 	}
 	va_end(args);
-	return (printed_chars);
+	return (count);
 }
