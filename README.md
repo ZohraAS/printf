@@ -1,1 +1,1 @@
-tis is areadme file
+this is team project made by moad chaabi and zohra ait said, it implements a custom printf function in C that offers a portion of the capability of the built-in printf functions. It enables printing characters, strings and integers using the conversion specifiers 'c','s','%','d' and 'i'.
