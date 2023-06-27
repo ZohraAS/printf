@@ -1,21 +1,22 @@
-#include <stdio.h>
-#include <stdarg.h>
 #include "main.h"
-
-int _printf(const char *format, ...);
-int handle_conversion_specifier(const char *format, va_list args);
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
 
 /**
  * _printf - printf function
  *
- * @format: format string
+ * @format: format
  *
- * Return: Number of chars printed
+ * Return: printed chars
  */
 int _printf(const char *format, ...)
 {
+	int printed_chars = 0;
 	va_list args;
-	int count = 0;
+	int ch;
+	char *str;
+	int num;
 
 	va_start(args, format);
 
@@ -24,58 +25,54 @@ int _printf(const char *format, ...)
 		if (*format == '%')
 		{
 			format++;
-			count += handle_conversion_specifier(format, args);
+			switch (*format)
+			{
+				case 'c':
+					ch = va_arg(args, int);
+					putchar(ch);
+					printed_chars++;
+					break;
+				case 's':
+					str = va_arg(args, char *);
+					fputs(str, stdout);
+					printed_chars += strlen(str);
+					break;
+				case '%':
+					putchar('%');
+					printed_chars++;
+					break;
+				case 'd':
+				case 'i':
+					num = va_arg(args, int);
+					printed_chars += printf("%d", num);
+					break;
+				case 'u':
+					num = va_arg(args, unsigned int);
+					printed_chars += printf("%u", num);
+					break;
+				case 'o':
+					num = va_arg(args, unsigned int);
+					printed_chars += printf("%o", num);
+					break;
+				case 'x':
+				case 'X':
+					num = va_arg(args, unsigned int);
+					printed_chars += printf("%x", num);
+					break;
+				default:
+					putchar('%');
+					putchar(*format);
+					printed_chars += 2;
+					break;
+			}
 		}
 		else
 		{
 			putchar(*format);
-			count++;
+			printed_chars++;
 		}
-		format++;
+	format++;
 	}
 	va_end(args);
-	return (count);
+	return (printed_chars);
 }
-
-/**
- * handle_conversion_specifier - Handle conversion specifier
- * @format: Format string
- * @args: Variable arguments list
- *
- * Return: Number of characters printed for the conversion specifier
- */
-int handle_conversion_specifier(const char *format, va_list args)
-{
-	int count = 0;
-	char ch;
-	const char *str;
-
-	switch (*format)
-	{
-		case 'c':
-			ch = (char) va_arg(args, int);
-			putchar(ch);
-			count++;
-			break;
-		case 's':
-			str = va_arg(args, const char *);
-			while (*str)
-			{
-				putchar(*str);
-				str++;
-				count++;
-			}
-			break;
-		case '%':
-			putchar('%');
-			count++;
-			break;
-		default:
-			putchar('%');
-			putchar(*format);
-			count += 2;
-			break;
-	}
-	return (count);
-}
-
